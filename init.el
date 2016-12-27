@@ -39,22 +39,22 @@ values."
      ;; <M-m f e R> (Emacs style) to install them.
      ;; ----------------------------------------------------------------
      ivy
-     ;; auto-completion
-     ;; better-defaults
+     better-defaults
      emacs-lisp
      git
      markdown
      org
-     ;; (shell :variables
-     ;;        shell-default-height 30
-     ;;        shell-default-position 'bottom)
-     ;; spell-checking
-     ;; syntax-checking
+     (shell :variables
+            shell-default-height 30
+            shell-default-position 'bottom)
+     spell-checking
+     syntax-checking
      (auto-completion :variables
                       auto-completion-enable-snippets-in-popup t)
      xkcd
      systemd
-     shell
+     ibuffer
+     org
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -299,33 +299,6 @@ before packages are loaded. If you are unsure, you should try in setting them in
 `dotspacemacs/user-config' first."
   )
 
-(defun max/smarter-move-beginning-of-line (arg)
-  "Move point back to indentation of beginning of line.
-
-Move point to the first non-whitespace character on this line.
-If point is already there, move to the beginning of the line.
-Effectively toggle between the first non-whitespace character and
-the beginning of the line.
-
-If ARG is not nil or 1, move forward ARG - 1 lines first.  If
-point reaches the beginning or end of the buffer, stop there.
-
-copied from:
-http://emacsredux.com/blog/2013/05/22/smarter-navigation-to-the-beginning-of-a-line/
-
-"
-  (interactive "^p")
-  (setq arg (or arg 1))
-  ;; Move lines first
-  (when (/= arg 1)
-    (let ((line-move-visual nil))
-      (forward-line (1- arg))))
-
-  (let ((orig-point (point)))
-    (back-to-indentation)
-    (when (= orig-point (point))
-      (move-beginning-of-line 1))))
-
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -342,12 +315,26 @@ you should place your code here."
   ;; Store tramp backups locally
   (setq tramp-backup-directory-alist backup-directory-alist
         tramp-default-method "ssh")
-  (define-key evil-normal-state-map "L" 'evil-end-of-line)
-  (define-key evil-normal-state-map "H" 'max/smarter-move-beginning-of-line)
+  (define-key evil-normal-state-map "L" 'mwim-end-of-code-or-line)
+  (define-key evil-normal-state-map "H" 'mwim-beginning-of-line-or-code)
   (define-key evil-normal-state-map "j" 'evil-next-visual-line)
   (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
   (define-key evil-visual-state-map "L" 'evil-end-of-line)
   (define-key evil-visual-state-map "H" 'evil-beginning-of-line)
+  ;; all org-mode config come in here not to mess with the spacemace org-mode
+  (with-eval-after-load 'org
+    (setq org-agenda-files (quote ("~/org/organizer.org")))
+    ;; setup org publish
+    (setq org-export-async-debug t)
+    (setq org-publish-project-alist
+          '(("orgfiles"
+             :base-directory "~/foss/blog/org"
+             :base-extension "org"
+             :publishing-directory "~/foss/blog/content/posts"
+             :publishing-function org-md-publish-to-md
+             :section-number nil
+             :with-toc nil)))
+    )
   )
 
 ;; Do not write anything past this comment. This is where Emacs will
@@ -359,10 +346,10 @@ you should place your code here."
  ;; If there is more than one, they won't work right.
  '(ansi-color-names-vector
    ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
- '(evil-want-Y-yank-to-eol nil)
+ '(evil-want-Y-yank-to-eol t)
  '(package-selected-packages
    (quote
-    (zenburn-theme xterm-color systemd shell-pop multi-term eshell-z eshell-prompt-extras esh-help web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode xkcd company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete yaml-mode smeargle orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
+    (mwim ibuffer-projectile flyspell-correct-ivy flyspell-correct flycheck-pos-tip pos-tip flycheck auto-dictionary zenburn-theme xterm-color systemd shell-pop multi-term eshell-z eshell-prompt-extras esh-help web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode xkcd company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete yaml-mode smeargle orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
  '(safe-local-variable-values
    (quote
     ((eval progn
