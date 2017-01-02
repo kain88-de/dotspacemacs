@@ -43,6 +43,7 @@ values."
             c-c++-default-mode-for-headers 'c++-mode)
      semantic
      latex
+     finance  ;; ledger-mode
      ;; Completion
      ivy
      (auto-completion :variables
