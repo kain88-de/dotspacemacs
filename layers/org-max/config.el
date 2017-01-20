@@ -3,7 +3,7 @@
                                "~/org/journal"))
 
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "WAITING(w)" "|" "DONE(d!)" "CANCELED(c@)")))
+        '((sequence "TODO(t)" "WAITING(w)" "Active(a)" "|" "DONE(d!)" "CANCELED(c@)")))
 
   ;; setup org publish
   (setq org-export-async-debug t)

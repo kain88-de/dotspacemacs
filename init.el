@@ -134,7 +134,8 @@ values."
    ;; `recents' `bookmarks' `projects' `agenda' `todos'."
    ;; List sizes may be nil, in which case
    ;; `spacemacs-buffer-startup-lists-length' takes effect.
-   dotspacemacs-startup-lists '((todos . 5))
+   dotspacemacs-startup-lists '((agenda . 5)
+                                (todos . 5))
    ;; True if the home buffer should respond to resize events.
    dotspacemacs-startup-buffer-responsive t
    ;; Default major mode of the scratch buffer (default `text-mode')
@@ -337,6 +338,7 @@ you should place your code here."
   (define-key evil-normal-state-map "k" 'evil-previous-visual-line)
   (define-key evil-visual-state-map "L" 'evil-end-of-line)
   (define-key evil-visual-state-map "H" 'evil-beginning-of-line)
+  (setq doc-view-resolution 150)
   ;; all org-mode config come in here not to mess with the spacemace org-mode
   )
 
