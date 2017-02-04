@@ -1,9 +1,16 @@
 (with-eval-after-load 'org
-  (setq org-agenda-files (list "~/org/organizer.org"
-                               "~/org/journal"))
+  (setq org-agenda-files (list "~/org/organizer.org"))
 
   (setq org-todo-keywords
         '((sequence "TODO(t)" "WAITING(w)" "Active(a)" "|" "DONE(d!)" "CANCELED(c@)")))
+
+  (setq org-capture-templates
+        '(("p" "PRIVAT-TODO" entry (file+headline "/home/max/org/organizer.org" "Private")
+           "* TODO %? %^g\n %u")
+          ("w" "WORK-TODO" entry (file+headline "/home/max/org/organizer.org" "Work")
+           "* TODO %? %^g\n %u")
+          ("o" "FOSS-TODO" entry (file+headline "/home/max/org/organizer.org" "Foss")
+           "* TODO %? %^g\n %u")))
 
   ;; setup org publish
   (setq org-export-async-debug t)
