@@ -11,7 +11,7 @@
 
 (defun spacemacs//clang-format-on-save ()
   "Format buffers with ClangFormat when they get saved."
-  (when c-c++-enable-clang-format-on-save
+  (when cpp-enable-clang-format-on-save
     (clang-format-buffer)))
 
 (defun spacemacs/clang-format-on-save ()
@@ -19,7 +19,7 @@
   (add-hook 'before-save-hook 'spacemacs//clang-format-on-save nil t))
 
 (defun spacemacs/company-more-than-prefix-guesser ()
-  (spacemacs/c-c++-load-clang-args)
+  (spacemacs/cpp-load-clang-args)
   (company-clang-guess-prefix))
 
 ;; Based on the Sarcasm/irony-mode compilation database code.
@@ -53,7 +53,7 @@
                     (split-string (buffer-string) "\n" t))))
     compile-flags))
 
-(defun spacemacs/c-c++-load-clang-args ()
+(defun spacemacs/cpp-load-clang-args ()
   "Sets the arguments for company-clang, the system paths for company-c-headers
 and the arguments for flyckeck-clang based on a project-specific text file."
   (unless company-clang-arguments
