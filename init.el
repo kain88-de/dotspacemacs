@@ -57,7 +57,6 @@ values."
             shell-default-position 'bottom)
      spell-checking
      syntax-checking
-     xkcd
      ibuffer
      ;; Org
      (org :variables
