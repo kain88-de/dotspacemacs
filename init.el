@@ -39,10 +39,11 @@ values."
      markdown
      systemd
      docker
-     (c-c++ :variables
-            c-c++-enable-clang-support t
-            c-c++-default-mode-for-headers 'c++-mode)
-     semantic
+     rust
+     (cpp :variables
+            cpp-enable-clang-support t
+            cpp-default-mode-for-headers 'c++-mode)
+     ;; semantic
      latex
      finance  ;; ledger-mode
      ;; Completion
@@ -71,7 +72,7 @@ values."
    ;; wrapped in a layer. If you need some configuration for these
    ;; packages, then consider creating a layer. You can also put the
    ;; configuration in `dotspacemacs/user-config'.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(irony rtags)
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
    ;; A list of packages that will not be installed and loaded.
@@ -351,7 +352,19 @@ you should place your code here."
   (define-key evil-visual-state-map "L" 'evil-end-of-line)
   (define-key evil-visual-state-map "H" 'evil-beginning-of-line)
   (setq doc-view-resolution 150)
-  ;; all org-mode config come in here not to mess with the spacemace org-mode
+
+  ;; Irony mode setup
+  ;; (add-hook 'c++-mode-hook 'irony-mode)
+  ;; (add-hook 'c-mode-hook 'irony-mode)
+
+  (defun my-irony-mode-hook ()
+    (define-key irony-mode-map
+      [remap completion-at-point] 'counsel-irony)
+    (define-key irony-mode-map
+      [remap complete-symbol] 'counsel-irony))
+  (add-hook 'irony-mode-hook 'my-irony-mode-hook)
+  (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)
+
   )
 
 (defun dotspacemacs/emacs-custom-settings ()
