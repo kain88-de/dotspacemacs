@@ -17,7 +17,6 @@
     cmake-mode
     company
     (company-c-headers :toggle (configuration-layer/package-usedp 'company))
-    company-ycmd
     flycheck
     gdb-mi
     ggtags
@@ -26,7 +25,6 @@
     semantic
     srefactor
     stickyfunc-enhance
-    ycmd
     xcscope
     ))
 
@@ -124,18 +122,6 @@
 
 (defun cpp/post-init-stickyfunc-enhance ()
   (spacemacs/add-to-hooks 'spacemacs/lazy-load-stickyfunc-enhance '(c-mode-hook c++-mode-hook)))
-
-(defun cpp/post-init-ycmd ()
-  (add-hook 'c++-mode-hook 'ycmd-mode)
-  (add-hook 'c-mode-hook 'ycmd-mode)
-  (add-to-list 'spacemacs-jump-handlers-c++-mode '(ycmd-goto :async t))
-  (add-to-list 'spacemacs-jump-handlers-c-mode '(ycmd-goto :async t))
-  (dolist (mode '(c++-mode c-mode))
-    (spacemacs/set-leader-keys-for-major-mode mode
-      "gG" 'ycmd-goto-imprecise)))
-
-(defun cpp/post-init-company-ycmd ()
-  (spacemacs|add-company-backends :backends company-ycmd :modes c-mode-common))
 
 (defun cpp/pre-init-xcscope ()
   (spacemacs|use-package-add-hook xcscope
