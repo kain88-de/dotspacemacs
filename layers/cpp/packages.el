@@ -15,6 +15,7 @@
     disaster
     clang-format
     cmake-mode
+    cmake-ide
     company
     (company-c-headers :toggle (configuration-layer/package-usedp 'company))
     flycheck
@@ -22,6 +23,8 @@
     ggtags
     helm-cscope
     helm-gtags
+    irony
+    rtags
     semantic
     srefactor
     stickyfunc-enhance
@@ -61,6 +64,10 @@
   (use-package clang-format
     :if cpp-enable-clang-support
     :init
+    (spacemacs/set-leader-keys-for-major-mode 'c-mode
+      "=" 'max/format-region-or-buffer)
+    (spacemacs/set-leader-keys-for-major-mode 'c++-mode
+      "=" 'max/format-region-or-buffer)
     (when cpp-enable-clang-format-on-save
       (spacemacs/add-to-hooks 'spacemacs/clang-format-on-save
                               '(c-mode-hook c++-mode-hook)))))
@@ -69,12 +76,20 @@
   (use-package cmake-mode
     :mode (("CMakeLists\\.txt\\'" . cmake-mode) ("\\.cmake\\'" . cmake-mode))))
 
+(defun cpp/init-cmake-ide ()
+  (use-package cmake-ide
+    :config
+    (cmake-ide-setup)))
+
 (defun cpp/post-init-company ()
   (when (configuration-layer/package-usedp 'cmake-mode)
     (spacemacs|add-company-backends :backends company-cmake :modes cmake-mode))
+  (when (configuration-layer/package-usedp 'company-c-headers)
+    (spacemacs|add-company-backends :backends company-c-headers :modes c-mode-common))
   (when cpp-enable-clang-support
     (spacemacs|add-company-backends :backends company-clang
       :modes c-mode-common)
+    (spacemacs|add-company-backends :backends company-rtags :modes c-mode-common)
     (setq company-clang-prefix-guesser 'spacemacs/company-more-than-prefix-guesser)
     (setq company-clang-arguments '("-std=c++11"))
     (spacemacs/add-to-hooks 'spacemacs/cpp-load-clang-args
@@ -82,10 +97,7 @@
 
 (defun cpp/init-company-c-headers ()
   (use-package company-c-headers
-    :defer t
-    :init (spacemacs|add-company-backends
-            :backends company-c-headers
-            :modes c-mode-common)))
+    :defer t))
 
 (defun cpp/post-init-flycheck ()
   (dolist (mode '(c-mode c++-mode))
@@ -111,6 +123,15 @@
 (defun cpp/post-init-helm-gtags ()
   (spacemacs/helm-gtags-define-keys-for-mode 'c-mode)
   (spacemacs/helm-gtags-define-keys-for-mode 'c++-mode))
+
+(defun cpp/init-irony ()
+  (use-package irony
+    :config
+    (add-hook 'irony-mode-hook 'max/irony-mode-hook)
+    (add-hook 'irony-mode-hook 'irony-cdb-autosetup-compile-options)))
+
+(defun cpp/init-rtags ()
+  (use-package rtags))
 
 (defun cpp/post-init-semantic ()
   (spacemacs/add-to-hooks 'semantic-mode '(c-mode-hook c++-mode-hook)))

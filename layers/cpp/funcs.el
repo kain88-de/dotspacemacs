@@ -69,3 +69,22 @@ and the arguments for flyckeck-clang based on a project-specific text file."
                   (append '("/usr/include" "/usr/local/include")
                           dirs))
       (setq-local flycheck-clang-args flags))))
+
+(defun max/irony-mode-hook ()
+  (define-key irony-mode-map
+    [remap completion-at-point] 'counsel-irony)
+  (define-key irony-mode-map
+    [remap complete-symbol] 'counsel-irony))
+
+(defun max/format-region-or-buffer ()
+  "Indent a region if selected, otherwise the whole buffer."
+  (interactive)
+  (save-excursion
+    (if (region-active-p)
+        (progn
+          (clang-format-region (region-beginning) (region-end))
+          (message "Formatted selected region."))
+      (progn
+        (clang-format-buffer)
+        (message "Formatted buffer.")))
+    (whitespace-cleanup)))
