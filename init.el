@@ -40,9 +40,6 @@ values."
      systemd
      docker
      rust
-     (cpp :variables
-            cpp-enable-clang-support t
-            cpp-default-mode-for-headers 'c++-mode)
      ;; semantic
      latex
      finance  ;; ledger-mode
@@ -59,14 +56,19 @@ values."
      spell-checking
      syntax-checking
      ibuffer
+     pass
      ;; Org
      (org :variables
           org-enable-org-journal-support t
           org-journal-dir "~/org/journal/"
           org-journal-file-format "%Y-%m-%d.org"
           org-journal-time-format "")
-     ;; org-journal
+     ;; Own modules
      org-max
+     (cpp :variables
+          cpp-enable-clang-support t
+          cpp-default-mode-for-headers 'c++-mode)
+     private
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -343,8 +345,8 @@ you should place your code here."
   ;; Protein Data Bank files are text
   (setq auto-mode-alist (append '(("\\.pdb$" . text-mode)) auto-mode-alist))
   ;; Store tramp backups locally and use ssh
-  (setq tramp-backup-directory-alist backup-directory-alist
-        tramp-default-method "ssh")
+  ;; (setq tramp-backup-directory-alist backup-directory-alist
+  ;;       tramp-default-method "ssh")
   (define-key evil-normal-state-map "L" 'mwim-end-of-code-or-line)
   (define-key evil-normal-state-map "H" 'mwim-beginning-of-line-or-code)
   (define-key evil-normal-state-map "j" 'evil-next-visual-line)
@@ -352,6 +354,7 @@ you should place your code here."
   (define-key evil-visual-state-map "L" 'evil-end-of-line)
   (define-key evil-visual-state-map "H" 'evil-beginning-of-line)
   (setq doc-view-resolution 150)
+
   )
 
 (defun dotspacemacs/emacs-custom-settings ()
@@ -369,7 +372,7 @@ This function is called at the very end of Spacemacs initialization."
  '(evil-want-Y-yank-to-eol t)
  '(package-selected-packages
    (quote
-    (company-rtags cmake-ide levenshtein string-inflection symon jekyll-modes polymode rtags irony toml-mode racer flycheck-rust seq cargo rust-mode fuzzy dockerfile-mode docker tablist docker-tramp winum ob-ipython unfill ivy-purpose window-purpose imenu-list ledger-mode flycheck-ledger company-auctex auctex-latexmk auctex stickyfunc-enhance srefactor disaster company-c-headers cmake-mode clang-format org-journal yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode cython-mode company-anaconda anaconda-mode pythonic mwim ibuffer-projectile flyspell-correct-ivy flyspell-correct flycheck-pos-tip pos-tip flycheck auto-dictionary zenburn-theme xterm-color systemd shell-pop multi-term eshell-z eshell-prompt-extras esh-help web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode xkcd company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete yaml-mode smeargle orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
+    (elpy find-file-in-project password-generator evil-lion editorconfig pass password-store jabber fsm company-rtags cmake-ide levenshtein string-inflection symon jekyll-modes polymode rtags irony toml-mode racer flycheck-rust seq cargo rust-mode fuzzy dockerfile-mode docker tablist docker-tramp winum ob-ipython unfill ivy-purpose window-purpose imenu-list ledger-mode flycheck-ledger company-auctex auctex-latexmk auctex stickyfunc-enhance srefactor disaster company-c-headers cmake-mode clang-format org-journal yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode cython-mode company-anaconda anaconda-mode pythonic mwim ibuffer-projectile flyspell-correct-ivy flyspell-correct flycheck-pos-tip pos-tip flycheck auto-dictionary zenburn-theme xterm-color systemd shell-pop multi-term eshell-z eshell-prompt-extras esh-help web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode xkcd company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete yaml-mode smeargle orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
  '(paradox-github-token t)
  '(safe-local-variable-values
    (quote
