@@ -57,6 +57,7 @@ values."
      syntax-checking
      ibuffer
      pass
+     mu4e
      ;; Org
      (org :variables
           org-enable-org-journal-support t
@@ -69,6 +70,8 @@ values."
           cpp-enable-clang-support t
           cpp-default-mode-for-headers 'c++-mode)
      private
+     (languagetool :variables
+                   langtool-language-tool-jar "/home/max/.spacemacs.d/bin/LanguageTool-3.7/languagetool-commandline.jar")
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
@@ -355,6 +358,75 @@ you should place your code here."
   (define-key evil-visual-state-map "H" 'evil-beginning-of-line)
   (setq doc-view-resolution 150)
 
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  ;; mu4e email settings ;;
+  ;;;;;;;;;;;;;;;;;;;;;;;;;
+  (setq mu4e-maildir "~/mail/maildirs")
+  ;; not using smtp-async yet
+  ;; some of these variables will get overridden by the contexts
+  (setq
+   send-mail-function 'smtpmail-send-it
+   message-send-mail-function 'smtpmail-send-it
+   smtpmail-smtp-server "smtp.fastmail.com"
+   smtpmail-smtp-service 465
+   smtpmail-stream-type 'ssl
+   )
+  (setq auth-sources (quote ("~/.authinfo.gpg" "~/.netrc")))
+  ;; If you get your mail without an explicit command,
+  ;; use "true" for the command (this is the default)
+  ;; when I press U in the main view, or C-c C-u elsewhere,
+  ;; this command is called, followed by the mu indexer
+  (setq mu4e-get-mail-command "mbsync --all")
+  (setq mu4e-contexts
+        `( ,(make-mu4e-context
+             :name "private max_linke@gmx.de"
+             :enter-func (lambda () (mu4e-message "entering private"))
+             :leave-func (lambda () (mu4e-message "leave private"))
+             :match-func (lambda (msg)
+                           (when msg
+                             (mu4e-message-contact-field-matches msg
+                                                                 :to
+                                                                 "max_linke@gmx.de")))
+             :vars '((user-mail-address . "max_linke@gmx.de")
+                     (user-full-name    . "Max Linke")
+                     (mu4e-sent-folder . "/gmx/Sent")
+                     (mu4e-drafts-folder . "/gmx/Drafts")
+                     (mu4e-trash-folder . "/gmx/Trash")
+                     (smtpmail-smtp-server . "mail.gmx.net")))
+           ,(make-mu4e-context
+             :name "work max.linke@biophys.mpg.de"
+             :enter-func (lambda () (mu4e-message "entering work"))
+             :leave-func (lambda () (mu4e-message "leave work"))
+             :match-func (lambda (msg)
+                           (when msg
+                             (mu4e-message-contact-field-matches msg
+                                                                 :to
+                                                                 "max.linke@biophys.mpg.de")))
+             :vars '((user-mail-address . "max.linke@biophys.mpg.de")
+                     (user-full-name    . "Max Linke")
+                     (mu4e-sent-folder . "/mpi/Sent")
+                     (mu4e-drafts-folder . "/mpi/Drafts")
+                     (mu4e-trash-folder . "/mpi/Trash")
+                     (smtpmail-smtp-server . "smtp.biophys.mpg.de")))
+           ,(make-mu4e-context
+             :name "gmail max.linke88@gmail.com"
+             :enter-func (lambda () (mu4e-message "entering gmail"))
+             :leave-func (lambda () (mu4e-message "leave gmail"))
+             :match-func (lambda (msg)
+                           (when msg
+                             (mu4e-message-contact-field-matches msg
+                                                                 :to
+                                                                 "max.linke88@gmail.com")))
+             :vars '((user-mail-address . "max.link88@gmail.com")
+                     (user-full-name    . "Max Linke")
+                     (mu4e-sent-folder . "/gmail/Sent")
+                     (mu4e-drafts-folder . "/gmail/Drafts")
+                     (mu4e-trash-folder . "/gmail/Trash")
+                     (mu4e-sent-messages-behavior . 'delete)
+                     (smtpmail-smtp-server . "smtp.googlemail.com")))
+           ))
+  (setq mu4e-context-policy 'pick-first)
+  (setq message-kill-buffer-on-exit t)
   )
 
 (defun dotspacemacs/emacs-custom-settings ()
@@ -367,89 +439,9 @@ This function is called at the very end of Spacemacs initialization."
  ;; If you edit it by hand, you could mess it up, so be careful.
  ;; Your init file should contain only one such instance.
  ;; If there is more than one, they won't work right.
- '(ansi-color-names-vector
-   ["#d2ceda" "#f2241f" "#67b11d" "#b1951d" "#3a81c3" "#a31db1" "#21b8c7" "#655370"])
- '(evil-want-Y-yank-to-eol t)
  '(package-selected-packages
    (quote
-    (elpy find-file-in-project password-generator evil-lion editorconfig pass password-store jabber fsm company-rtags cmake-ide levenshtein string-inflection symon jekyll-modes polymode rtags irony toml-mode racer flycheck-rust seq cargo rust-mode fuzzy dockerfile-mode docker tablist docker-tramp winum ob-ipython unfill ivy-purpose window-purpose imenu-list ledger-mode flycheck-ledger company-auctex auctex-latexmk auctex stickyfunc-enhance srefactor disaster company-c-headers cmake-mode clang-format org-journal yapfify pyvenv pytest pyenv-mode py-isort pip-requirements live-py-mode hy-mode cython-mode company-anaconda anaconda-mode pythonic mwim ibuffer-projectile flyspell-correct-ivy flyspell-correct flycheck-pos-tip pos-tip flycheck auto-dictionary zenburn-theme xterm-color systemd shell-pop multi-term eshell-z eshell-prompt-extras esh-help web-beautify livid-mode skewer-mode simple-httpd json-mode json-snatcher json-reformat js2-refactor multiple-cursors js2-mode js-doc company-tern dash-functional tern coffee-mode xkcd company-statistics company auto-yasnippet yasnippet ac-ispell auto-complete yaml-mode smeargle orgit org-projectile org-present org org-pomodoro alert log4e gntp org-download mmm-mode markdown-toc markdown-mode magit-gitflow htmlize gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md evil-magit magit magit-popup git-commit with-editor ws-butler window-numbering which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package toc-org spaceline powerline smex restart-emacs request rainbow-delimiters popwin persp-mode pcre2el paradox spinner org-plus-contrib org-bullets open-junk-file neotree move-text macrostep lorem-ipsum linum-relative link-hint ivy-hydra info+ indent-guide ido-vertical-mode hydra hungry-delete hl-todo highlight-parentheses highlight-numbers parent-mode highlight-indentation hide-comnt help-fns+ helm-make helm helm-core google-translate golden-ratio flx-ido flx fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-lisp-state smartparens evil-indent-plus evil-iedit-state iedit evil-exchange evil-escape evil-ediff evil-args evil-anzu anzu evil goto-chg undo-tree eval-sexp-fu highlight elisp-slime-nav dumb-jump popup f s diminish define-word counsel-projectile projectile pkg-info epl counsel swiper ivy column-enforce-mode clean-aindent-mode bind-map bind-key auto-highlight-symbol auto-compile packed dash async aggressive-indent adaptive-wrap ace-window ace-link avy quelpa package-build spacemacs-theme)))
- '(paradox-github-token t)
- '(safe-local-variable-values
-   (quote
-    ((eval progn
-           (require
-            (quote projectile))
-           (puthash
-            (projectile-project-root)
-            "latexmk -pdf report.tex" projectile-compilation-cmd-map))
-     (eval setq c-basic-offset 2)
-     (eval add-hook
-           (quote before-save-hook)
-           (function clang-format-buffer)
-           nil t)
-     (eval progn
-           (require
-            (quote projectile))
-           (puthash
-            (projectile-project-root)
-            "cmake --build build/release -- -j4" projectile-compilation-cmd-map)
-           (puthash
-            (projectile-project-root)
-            "cmake --build build/release --target test" projectile-test-cmd-map))
-     (eval progn
-           (require
-            (quote projectile))
-           (puthash
-            (projectile-project-root)
-            "cmake --build build/release -- -j4" projectile-compilation-cmd-map)
-           (puthash
-            (projectile-project-root)
-            "cmake --build build/release --target test" projectile-test-cmd-map)
-           (setq company-clang-arguments
-                 (delete-dups
-                  (append company-clang-arguments
-                          (list
-                           (concat "-I"
-                                   (projectile-project-root)
-                                   "src")
-                           (concat "-I"
-                                   (projectile-project-root)
-                                   "ext/gtest-1.7.0/include")
-                           "/usr/include/yaml-cpp" "/usr/include/boost")))))
-     (eval progn
-           (require
-            (quote projectile))
-           (puthash
-            (projectile-project-root)
-            "make" projectile-compilation-cmd-map))
-     (eval add-hool
-           (quote before-save-hook)
-           (function py-yapf-buffer)
-           nil t)
-     (eval progn
-           (require
-            (quote projectile))
-           (puthash
-            (projectile-project-root)
-            "python -m pytest hummer -v" projectile-test-cmd-map))
-     (eval progn
-           (require
-            (quote projectile))
-           (puthash
-            (projectile-project-root)
-            "latexmk -pdf paper.tex" projectile-compilation-cmd-map))
-     (eval progn
-           (require
-            (quote projectile))
-           (puthash
-            (projectile-project-root)
-            "make ARDUINO_PATH=$HOME/foss/arduino/arduino-1.8.0 ARDUINO_LOCAL_LIB_PATH=$HOME/foss/arduino" projectile-compilation-cmd-map))
-     (eval progn
-           (require
-            (quote projectile))
-           (puthash
-            (projectile-project-root)
-            "ARDUINO_PATH=$HOME/foss/arduino/arduino-1.8.0 ARDUINO_LOCAL_LIB_PATH=$HOME/foss/arduino make" projectile-compilation-cmd-map))))))
+    (helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org systemd symon string-inflection spaceline smex smeargle shell-pop restart-emacs request rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el password-generator pass paradox orgit org-projectile org-present org-pomodoro org-journal org-download org-bullets org-brain open-junk-file ob-ipython neotree mwim multi-term mu4e-maildirs-extension mu4e-alert move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint ledger-mode langtool js2-refactor js-doc jabber ivy-purpose ivy-hydra irony info+ indent-guide ibuffer-projectile hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flycheck-ledger flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump dockerfile-mode docker disaster define-word cython-mode counsel-projectile company-tern company-statistics company-rtags company-c-headers company-auctex company-anaconda column-enforce-mode coffee-mode cmake-mode cmake-ide clean-aindent-mode clang-format cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
