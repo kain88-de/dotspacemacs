@@ -16,9 +16,9 @@
   (setq org-export-async-debug t)
   (setq org-publish-project-alist
         '(("orgfiles"
-           :base-directory "~/foss/blog/org"
+           :base-directory "~/blog/org"
            :base-extension "org"
-           :publishing-directory "~/foss/blog/content/posts"
+           :publishing-directory "~/blog/content/posts"
            :publishing-function org-md-publish-to-md
            :section-number nil
            :with-toc nil)))
