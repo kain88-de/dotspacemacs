@@ -70,9 +70,9 @@ values."
      (cpp :variables
           cpp-enable-clang-support t
           cpp-default-mode-for-headers 'c++-mode)
-     private
-     (languagetool :variables
-                   langtool-language-tool-jar "/home/max/.spacemacs.d/bin/LanguageTool-3.7/languagetool-commandline.jar")
+     ;; private
+     ;; (languagetool :variables
+     ;;               langtool-language-tool-jar "/home/max/.spacemacs.d/bin/LanguageTool-3.7/languagetool-commandline.jar")
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
