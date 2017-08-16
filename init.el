@@ -33,7 +33,6 @@ values."
    '(
      ;; languages
      python
-     javascript
      yaml
      emacs-lisp
      markdown
