@@ -428,9 +428,9 @@ you should place your code here."
                      (mu4e-trash-folder . "/gmx/Trash")
                      (mu4e-refile-folder . (lambda (msg)
                                              (cond
-                                              ((mu4e-message-contact-field-matches msg :to "@amazon.")
+                                              ((mu4e-message-contact-field-matches msg :to "@amazon.*")
                                                "/gmx/E-Commerce.Amazon")
-                                              ((mu4e-message-contact-field-matches msg :to "@kickstarter.")
+                                              ((mu4e-message-contact-field-matches msg :to "@kickstarter.*")
                                                "/gmx/E-Commerce.Kickstarter")
                                               ((mu4e-message-contact-field-matches msg '(:to :cc) "emacs-orgmode@gnu.org")
                                                "/gmx/MailingLists.Emacs")
