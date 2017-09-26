@@ -360,6 +360,7 @@ This function is called immediately after `dotspacemacs/init', before layer
 configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
+  (setenv "WORKON_HOME" "/home/<username>/.local/bin/anaconda3/envs")
   )
 
 (defun dotspacemacs/user-config ()
@@ -376,8 +377,8 @@ you should place your code here."
   ;; Protein Data Bank files are text
   (setq auto-mode-alist (append '(("\\.pdb$" . text-mode)) auto-mode-alist))
   ;; Store tramp backups locally and use ssh
-  ;; (setq tramp-backup-directory-alist backup-directory-alist
-  ;;       tramp-default-method "ssh")
+  (setq tramp-backup-directory-alist backup-directory-alist
+        tramp-default-method "ssh")
   (define-key evil-normal-state-map "L" 'mwim-end-of-code-or-line)
   (define-key evil-normal-state-map "H" 'mwim-beginning-of-line-or-code)
   (define-key evil-normal-state-map "j" 'evil-next-visual-line)
@@ -409,6 +410,9 @@ you should place your code here."
         mu4e-view-show-images t
         ;; change filename to avoid duplicate UID in mbsync
         mu4e-change-filenames-when-moving t
+        mu4e-compose-dont-reply-to-self t
+        mu4e-context-policy 'pick-first
+        message-kill-buffer-on-exit t
         )
   (setq mu4e-contexts
         `( ,(make-mu4e-context
@@ -473,8 +477,6 @@ you should place your code here."
                      (mu4e-sent-messages-behavior . delete)
                      (smtpmail-smtp-server . "smtp.googlemail.com")))
            ))
-  (setq mu4e-context-policy 'pick-first)
-  (setq message-kill-buffer-on-exit t)
   )
 
 (defun dotspacemacs/emacs-custom-settings ()
@@ -489,7 +491,7 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (alert magit-popup projectile org-plus-contrib magit git-commit async rust-mode org-category-capture counsel swiper packed yasnippet rtags company evil flycheck helm helm-core ivy avy markdown-mode with-editor helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org systemd symon string-inflection spaceline smex smeargle shell-pop restart-emacs request rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el password-generator pass paradox orgit org-projectile org-present org-pomodoro org-journal org-download org-bullets org-brain open-junk-file ob-ipython neotree mwim multi-term mu4e-maildirs-extension mu4e-alert move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint ledger-mode langtool js2-refactor js-doc jabber ivy-purpose ivy-hydra irony info+ indent-guide ibuffer-projectile hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flycheck-ledger flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump dockerfile-mode docker disaster define-word cython-mode counsel-projectile company-tern company-statistics company-rtags company-c-headers company-auctex company-anaconda column-enforce-mode coffee-mode cmake-mode cmake-ide clean-aindent-mode clang-format cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
+    (password-store anaconda-mode smartparens goto-chg window-purpose s iedit hydra alert magit-popup projectile org-plus-contrib magit git-commit async rust-mode org-category-capture counsel swiper packed yasnippet rtags company evil flycheck helm helm-core ivy avy markdown-mode with-editor helm-themes helm-swoop helm-purpose helm-projectile helm-mode-manager helm-flx helm-descbinds helm-ag ace-jump-helm-line yapfify yaml-mode xterm-color ws-butler winum which-key wgrep web-beautify volatile-highlights vi-tilde-fringe uuidgen use-package unfill toml-mode toc-org systemd symon string-inflection spaceline smex smeargle shell-pop restart-emacs request rainbow-delimiters racer pyvenv pytest pyenv-mode py-isort popwin pip-requirements persp-mode pcre2el password-generator pass paradox orgit org-projectile org-present org-pomodoro org-journal org-download org-bullets org-brain open-junk-file ob-ipython neotree mwim multi-term mu4e-maildirs-extension mu4e-alert move-text mmm-mode markdown-toc magit-gitflow macrostep lorem-ipsum livid-mode live-py-mode linum-relative link-hint ledger-mode langtool js2-refactor js-doc jabber ivy-purpose ivy-hydra irony info+ indent-guide ibuffer-projectile hy-mode hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation hide-comnt help-fns+ helm-make google-translate golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy flyspell-correct-ivy flycheck-rust flycheck-pos-tip flycheck-ledger flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-matchit evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-args evil-anzu eval-sexp-fu eshell-z eshell-prompt-extras esh-help elisp-slime-nav editorconfig dumb-jump dockerfile-mode docker disaster define-word cython-mode counsel-projectile company-tern company-statistics company-rtags company-c-headers company-auctex company-anaconda column-enforce-mode coffee-mode cmake-mode cmake-ide clean-aindent-mode clang-format cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
  '(safe-local-variable-values
    (quote
     ((eval progn
