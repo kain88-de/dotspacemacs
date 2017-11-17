@@ -38,6 +38,7 @@ This function should only modify configuration layer settings."
      systemd
      docker
      rust
+     ess
      ;; semantic
      latex
      finance  ;; ledger-mode
