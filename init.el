@@ -71,8 +71,10 @@ This function should only modify configuration layer settings."
           cpp-enable-clang-support t
           cpp-default-mode-for-headers 'c++-mode)
      ;; private
-     ;; (languagetool :variables
-     ;;               langtool-language-tool-jar "/home/max/.spacemacs.d/bin/LanguageTool-3.7/languagetool-commandline.jar")
+     (languagetool :variables
+                   languagetool-show-error-on-jump t
+                   langtool-java-classpath "/usr/share/languagetool:/usr/share/java/languagetool/*"
+                   langtool-default-language "en-US")
      )
    ;; List of additional packages that will be installed without being
    ;; wrapped in a layer. If you need some configuration for these
