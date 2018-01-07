@@ -2,11 +2,19 @@
   (setq org-agenda-files (list "~/org/organizer.org"))
 
   (setq org-todo-keywords
-        '((sequence "TODO(t)" "WAITING FOR(w)" "SOMEDAY(s)" "|" "DONE(d!)" "CANCELED(c@)")))
+        '((sequence "TODO(t)" "WAITING FOR(w)" "SOMEDAY(s)" "NEXT(n)" "|" "DONE(d!)" "CANCELED(c@)")))
 
   (setq org-capture-templates
         '(("p" "capture" entry (file+headline "/home/max/org/organizer.org" "Inbox")
            "* %? \n")))
+
+  ;; Agenda views
+  (setq org-agenda-custom-commands
+        '(
+          ("n" todo "NEXT")
+          ("d" "Agenda + Next Actions" ((agenda) (todo "NEXT")))
+          )
+        )
 
   ;; setup org publish
   (setq org-export-async-debug t)
