@@ -1,4 +1,6 @@
 ;; -*- mode: emacs-lisp -*-
+
+
 ;; This file is loaded by Spacemacs at startup.
 ;; It must be stored in your home directory.
 
@@ -39,10 +41,12 @@ This function should only modify configuration layer settings."
      yaml
      emacs-lisp
      markdown
-     systemd
      docker
      rust
      ess
+     (c-c++ :variables
+          c-c++-enable-clang-support t
+          c-c++-default-mode-for-headers 'c++-mode)
      ;; semantic
      latex
      finance  ;; ledger-mode
@@ -59,21 +63,8 @@ This function should only modify configuration layer settings."
      spell-checking
      syntax-checking
      ibuffer
-     pass
-     mu4e
-     spotify
-     ;; Org
-     (org :variables
-          org-enable-org-journal-support t
-          org-journal-dir "~/org/journal/"
-          org-journal-file-format "%Y-%m-%d.org"
-          org-journal-time-format "")
-     ;; Own modules
+     org
      org-max
-     mu4e-max
-     (cpp :variables
-          cpp-enable-clang-support t
-          cpp-default-mode-for-headers 'c++-mode)
      ;; private
      (languagetool :variables
                    languagetool-show-error-on-jump t
@@ -88,7 +79,7 @@ This function should only modify configuration layer settings."
    ;; To use a local version of a package, use the `:location' property:
    ;; '(your-package :location "~/path/to/your-package/")
    ;; Also include the dependencies as they will not be resolved automatically.
-   dotspacemacs-additional-packages '()
+   dotspacemacs-additional-packages '(meson-mode cmake-mode)
 
    ;; A list of packages that cannot be updated.
    dotspacemacs-frozen-packages '()
