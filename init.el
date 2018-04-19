@@ -449,6 +449,7 @@ configuration.
 It is mostly for variables that should be set before packages are loaded.
 If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setenv "WORKON_HOME" "/home/<username>/.local/bin/anaconda3/envs")
+  (setq exec-path-from-shell-check-startup-files nil)
   )
 
 (defun dotspacemacs/user-config ()
