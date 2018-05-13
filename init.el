@@ -44,7 +44,8 @@ This function should only modify configuration layer settings."
      ess
      (c-c++ :variables
           c-c++-enable-clang-support t
-          c-c++-default-mode-for-headers 'c++-mode)
+          c-c++-default-mode-for-headers 'c++-mode
+          c-c++-enable-c++11 t)
      ;; semantic
      latex
      finance  ;; ledger-mode
@@ -397,7 +398,7 @@ It should only modify the values of Spacemacs settings."
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server nil
+   dotspacemacs-persistent-server t
 
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
@@ -491,7 +492,39 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (yasnippet-snippets yaml-mode pyvenv org-mime org-brain link-hint ledger-mode langtool hy-mode htmlize evil-nerd-commenter evil-matchit evil-magit editorconfig dockerfile-mode docker clang-format avy company counsel ess flycheck helm helm-core magit git-commit ghub with-editor spaceline ivy dash evil async org-plus-contrib yapfify xterm-color ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package unfill undo-tree toml-mode toc-org tablist symon swiper string-inflection spaceline-all-the-icons smex smeargle shell-pop restart-emacs request realgud rainbow-delimiters racer pytest pyenv-mode py-isort powerline popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file ob-ipython neotree nameless mwim multi-term move-text mmm-mode meson-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative julia-mode json-mode ivy-xref ivy-rtags ivy-purpose ivy-hydra indent-guide importmagic ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make goto-chg google-translate google-c-style golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy font-lock+ flyspell-correct-ivy flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-ledger flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-mc evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu ess-R-data-view eshell-z eshell-prompt-extras esh-help elisp-slime-nav dumb-jump docker-tramp disaster diminish define-word cython-mode counsel-projectile company-statistics company-rtags company-c-headers company-auctex company-anaconda column-enforce-mode cmake-mode clean-aindent-mode centered-cursor-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ac-ispell))))
+    (yasnippet-snippets yaml-mode pyvenv org-mime org-brain link-hint ledger-mode langtool hy-mode htmlize evil-nerd-commenter evil-matchit evil-magit editorconfig dockerfile-mode docker clang-format avy company counsel ess flycheck helm helm-core magit git-commit ghub with-editor spaceline ivy dash evil async org-plus-contrib yapfify xterm-color ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package unfill undo-tree toml-mode toc-org tablist symon swiper string-inflection spaceline-all-the-icons smex smeargle shell-pop restart-emacs request realgud rainbow-delimiters racer pytest pyenv-mode py-isort powerline popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file ob-ipython neotree nameless mwim multi-term move-text mmm-mode meson-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative julia-mode json-mode ivy-xref ivy-rtags ivy-purpose ivy-hydra indent-guide importmagic ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make goto-chg google-translate google-c-style golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy font-lock+ flyspell-correct-ivy flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-ledger flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-mc evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu ess-R-data-view eshell-z eshell-prompt-extras esh-help elisp-slime-nav dumb-jump docker-tramp disaster diminish define-word cython-mode counsel-projectile company-statistics company-rtags company-c-headers company-auctex company-anaconda column-enforce-mode cmake-mode clean-aindent-mode centered-cursor-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
+ '(safe-local-variable-values
+   (quote
+    ((eval add-hool
+           (quote before-save-hook)
+           (function py-yapf-buffer)
+           nil t)
+     (eval progn
+           (require
+            (quote projectile))
+           (puthash
+            (projectile-project-root)
+            "python -m pytest hummer -v" projectile-test-cmd-map))
+     (eval setq c-basic-offset 2)
+     (eval add-hook
+           (quote before-save-hook)
+           (function clang-format-buffer)
+           nil t)
+     (eval progn
+           (require
+            (quote projectile))
+           (puthash
+            (projectile-project-root)
+            "cmake --build build/release -- -j4" projectile-compilation-cmd-map)
+           (puthash
+            (projectile-project-root)
+            "cmake --build build/release --target test" projectile-test-cmd-map))
+     (eval progn
+           (require
+            (quote projectile))
+           (puthash
+            (projectile-project-root)
+            "make" projectile-compilation-cmd-map))))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
