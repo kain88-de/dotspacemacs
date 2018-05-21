@@ -45,6 +45,7 @@ This function should only modify configuration layer settings."
      (c-c++ :variables
           c-c++-enable-clang-support t
           c-c++-default-mode-for-headers 'c++-mode
+          c-c++-enable-rtags-support t
           c-c++-enable-c++11 t)
      ;; semantic
      latex
@@ -103,6 +104,25 @@ It should only modify the values of Spacemacs settings."
   ;; This setq-default sexp is an exhaustive list of all the supported
   ;; spacemacs settings.
   (setq-default
+   ;; If non-nil then enable support for the portable dumper. You'll need
+   ;; to compile Emacs 27 from source following the instructions in file
+   ;; EXPERIMENTAL.org at to root of the git repository.
+   ;; (default nil)
+   dotspacemacs-enable-emacs-pdumper nil
+
+   ;; File path pointing to emacs 27.1 executable compiled with support
+   ;; for the portable dumper (this is currently the branch pdumper).
+   ;; (default "emacs")
+   dotspacemacs-emacs-pdumper-executable-file "emacs"
+
+   ;; Name of the Spacemacs dump file. This is the file will be created by the
+   ;; portable dumper in the cache directory under dumps sub-directory.
+   ;; To load it when starting Emacs add the parameter `--dump-file'
+   ;; when invoking Emacs 27.1 executable on the command line, for instance:
+   ;;   ./emacs --dump-file=~/.emacs.d/.cache/dumps/spacemacs.pdmp
+   ;; (default spacemacs.pdmp)
+   dotspacemacs-emacs-dumper-dump-file "spacemacs.pdmp"
+
    ;; If non-nil ELPA repositories are contacted via HTTPS whenever it's
    ;; possible. Set it to nil if you have no way to use HTTPS in your
    ;; environment, otherwise it is strongly recommended to let it set to t.
@@ -394,11 +414,12 @@ It should only modify the values of Spacemacs settings."
    dotspacemacs-highlight-delimiters 'all
 
    ;; If non-nil, start an Emacs server if one is not already running.
-   dotspacemacs-enable-server t
+   ;; (default nil)
+   dotspacemacs-enable-server nil
 
    ;; If non-nil, advise quit functions to keep server open when quitting.
    ;; (default nil)
-   dotspacemacs-persistent-server t
+   dotspacemacs-persistent-server nil
 
    ;; List of search tool executable names. Spacemacs uses the first installed
    ;; tool of the list. Supported tools are `rg', `ag', `pt', `ack' and `grep'.
@@ -454,6 +475,13 @@ If you are unsure, try setting them in `dotspacemacs/user-config' first."
   (setq exec-path-from-shell-check-startup-files nil)
   )
 
+(defun dotspacemacs/user-load ()
+  "Library to load while dumping.
+This function is called while dumping Spacemacs configuration. You can
+`require' or `load' the libraries of your choice that will be included
+in the dump."
+  )
+
 (defun dotspacemacs/user-config ()
   "Configuration function for user code.
 This function is called at the very end of Spacemacs initialization after
@@ -477,7 +505,6 @@ you should place your code here."
   (define-key evil-visual-state-map "L" 'evil-end-of-line)
   (define-key evil-visual-state-map "H" 'evil-beginning-of-line)
   (setq doc-view-resolution 150)
-
   )
 
 (defun dotspacemacs/emacs-custom-settings ()
@@ -492,19 +519,13 @@ This function is called at the very end of Spacemacs initialization."
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (yasnippet-snippets yaml-mode pyvenv org-mime org-brain link-hint ledger-mode langtool hy-mode htmlize evil-nerd-commenter evil-matchit evil-magit editorconfig dockerfile-mode docker clang-format avy company counsel ess flycheck helm helm-core magit git-commit ghub with-editor spaceline ivy dash evil async org-plus-contrib yapfify xterm-color ws-butler winum which-key wgrep volatile-highlights vi-tilde-fringe uuidgen use-package unfill undo-tree toml-mode toc-org tablist symon swiper string-inflection spaceline-all-the-icons smex smeargle shell-pop restart-emacs request realgud rainbow-delimiters racer pytest pyenv-mode py-isort powerline popwin pippel pipenv pip-requirements persp-mode pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-download org-bullets open-junk-file ob-ipython neotree nameless mwim multi-term move-text mmm-mode meson-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative julia-mode json-mode ivy-xref ivy-rtags ivy-purpose ivy-hydra indent-guide importmagic ibuffer-projectile hungry-delete hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make goto-chg google-translate google-c-style golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-link gh-md fuzzy font-lock+ flyspell-correct-ivy flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-ledger flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-mc evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu eval-sexp-fu ess-R-data-view eshell-z eshell-prompt-extras esh-help elisp-slime-nav dumb-jump docker-tramp disaster diminish define-word cython-mode counsel-projectile company-statistics company-rtags company-c-headers company-auctex company-anaconda column-enforce-mode cmake-mode clean-aindent-mode centered-cursor-mode cargo auto-yasnippet auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
+    (yasnippet-snippets pyvenv persp-mode org-brain ledger-mode hy-mode git-link flyspell-correct-ivy flyspell-correct evil-matchit eval-sexp-fu editorconfig dumb-jump docker counsel-projectile counsel company-anaconda auto-yasnippet anaconda-mode yasnippet company ess smartparens flycheck helm helm-core projectile magit magit-popup spaceline ivy which-key evil async org-plus-contrib hydra bind-key yapfify yaml-mode xterm-color ws-butler winum wgrep volatile-highlights vi-tilde-fringe uuidgen use-package unfill undo-tree toml-mode toc-org tablist symon swiper string-inflection spaceline-all-the-icons smex smeargle shell-pop restart-emacs request rainbow-delimiters racer pytest pyenv-mode py-isort powerline popwin pippel pipenv pip-requirements pcre2el password-generator paradox overseer orgit org-projectile org-present org-pomodoro org-mime org-download org-bullets open-junk-file ob-ipython neotree nameless mwim multi-term move-text mmm-mode meson-mode markdown-toc magit-gitflow macrostep lorem-ipsum live-py-mode linum-relative link-hint langtool julia-mode json-mode ivy-xref ivy-rtags ivy-purpose ivy-hydra indent-guide importmagic ibuffer-projectile hungry-delete htmlize hl-todo highlight-parentheses highlight-numbers highlight-indentation helm-make goto-chg google-translate google-c-style golden-ratio gnuplot gitignore-mode gitconfig-mode gitattributes-mode git-timemachine git-messenger git-commit ghub gh-md fuzzy font-lock+ flycheck-rust flycheck-rtags flycheck-pos-tip flycheck-ledger flx-ido fill-column-indicator fancy-battery eyebrowse expand-region exec-path-from-shell evil-visualstar evil-visual-mark-mode evil-unimpaired evil-tutor evil-surround evil-search-highlight-persist evil-org evil-numbers evil-nerd-commenter evil-mc evil-magit evil-lisp-state evil-lion evil-indent-plus evil-iedit-state evil-exchange evil-escape evil-ediff evil-cleverparens evil-args evil-anzu ess-R-data-view eshell-z eshell-prompt-extras esh-help elisp-slime-nav dockerfile-mode docker-tramp disaster diminish define-word cython-mode company-statistics company-rtags company-c-headers company-auctex column-enforce-mode cmake-mode clean-aindent-mode clang-format centered-cursor-mode cargo auto-highlight-symbol auto-dictionary auto-compile auctex-latexmk aggressive-indent adaptive-wrap ace-window ace-link ac-ispell)))
  '(safe-local-variable-values
    (quote
     ((eval add-hool
            (quote before-save-hook)
            (function py-yapf-buffer)
            nil t)
-     (eval progn
-           (require
-            (quote projectile))
-           (puthash
-            (projectile-project-root)
-            "python -m pytest hummer -v" projectile-test-cmd-map))
      (eval setq c-basic-offset 2)
      (eval add-hook
            (quote before-save-hook)
